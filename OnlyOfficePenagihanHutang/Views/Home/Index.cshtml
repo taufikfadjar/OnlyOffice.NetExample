@@ -1,0 +1,118 @@
+﻿@model  OnlyOfficePenagihanHutang.Models.Home.HomeViewModel
+
+@{
+    ViewBag.Title = "Home Page";
+}
+<style type="text/css">
+    body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        -ms-content-zooming: none;
+    }
+
+    #office_frame {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        margin: 0;
+        border: none;
+        display: block;
+    }
+</style>
+
+
+<div class="container">
+    <h1 style="
+    margin-top: 100px;
+">Daftar Tagihan Hutang</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">No</th>
+                <th scope="col">Nama</th>
+                <th scope="col">Alamat</th>
+                <th scope="col">Nomer Surat Hutang</th>
+                <th scope="col">Nomer Faktur</th>
+                <th scope="col">Harga</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @{ 
+                var increment = 1;
+
+            }
+
+            @foreach (var item in Model.TagihanList)
+            {
+            <tr>
+                <th scope="row">@increment</th>
+                <td>@item.Name</td>
+                <td>@item.Alamat</td>
+                <td>@item.NomerSuratHutang</td>
+                <td>@item.NomerFaktur</td>
+                <td>@item.Harga</td>
+                <td><button onclick="Download('@item.Id')"> Download </button></td>
+                <td><button onclick="Preview('@item.Id')"> Preview </button></td>
+            </tr>
+                increment++;
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="modal fade" id="documentpreview" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true" style="z-index:9999999999">
+    <div class="modal-dialog modal-lg" style="max-width:75vw;" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color:rgba(0,0,0,0.85)">
+                <h5 class="modal-title  m--font-light" id="exampleModalLabel">Preview</h5>
+                <button type="button" class="close m--font-light" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="previewwindow" style="padding:1rem;background-color:rgba(0,0,0,0.85);height:700px">
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function Download(id) {
+        window.open("@Url.Action("Download", "Home")" +"/" + id, '_blank');
+    }
+
+    function Preview(id) {
+                $.ajax({
+                    method: "POST",
+                    async: false,
+                    url: "/Home/Preview",
+                    data: '{ id: "' + id + '" }',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "html",
+                    success: function (response) {
+                        $("#documentpreview").find(".modal-body").html(response);
+                        $("#documentpreview").modal('show');
+                    },
+                    failure: function (response) {
+                        alert(response.responseText);
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+    }
+
+</script>

@@ -1,0 +1,26 @@
+﻿
+@model  OnlyOfficePenagihanHutang.Models.Home.TemplateViewModel
+
+
+<form id="office_form" name="office_form" target="office_frame" action="@Model.Action" method="post">
+    <input name="access_token" value="" type="hidden" />
+    <input name="access_token_ttl" value="" type="hidden" />
+</form>
+
+<span id="frameholder"></span>
+
+<script type="text/javascript">
+    var frameholder = document.getElementById('frameholder');
+    var office_frame = document.createElement('iframe');
+    office_frame.name = 'office_frame';
+    office_frame.id = 'office_frame';
+
+    office_frame.title = 'Office Frame';
+    office_frame.setAttribute('allowfullscreen', 'true');
+
+    office_frame.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms allow-popups allow-top-navigation allow-popups-to-escape-sandbox allow-downloads allow-modals');
+    office_frame.setAttribute('allow', 'autoplay camera microphone display-capture');
+    frameholder.appendChild(office_frame);
+
+    document.getElementById('office_form').submit();
+</script>
